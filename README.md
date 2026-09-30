@@ -4,6 +4,11 @@
 обращений пользователей в поддержку (чат с автодосье, скриншоты, голосовые
 сообщения, ответы внешнего ИИ-воркера).
 
+Изначально основано на [vladimir-kharin/1c_mcp](https://github.com/vladimir-kharin/1c_mcp)
+(HTTP-сервис в стиле MCP: tools list/call), далее доработано: диагностика
+(движения, обмены, константы, техжурнал), execute_code, точка обращений
+пользователей с автодосье и вложениями.
+
 - **Дистрибутивы (.cfe)** — в [релизах](https://github.com/Arman-Kudaibergenov/ai-debug/releases)
 - **Инструкция по установке** — [УСТАНОВКА.md](УСТАНОВКА.md)
 - Требования: платформа 8.3.24+, конфигурация на БСП, публикация базы на веб-сервере
@@ -23,7 +28,7 @@
 | `/hs/ai/support/create` | POST | Создать обращение: `{"subject","text","contextLink"}` |
 | `/hs/ai/support/reply` | POST | Ответ воркера: `{"id","text"}` → статус «Отвечено» |
 
-## Инструменты (24)
+## Инструменты (23)
 
 - **Запросы и код**: `execute_query` — произвольный запрос; `execute_code` —
   произвольный серверный BSL (eval-выражение, при синтаксической ошибке —
@@ -31,7 +36,7 @@
 - **Справочники**: `get_catalog_item`, `find_catalog_items`,
   `create_catalog_item`, `update_catalog_item`
 - **Документы**: `get_document`, `create_document`, `update_document`,
-  `post_document`, `unpost_document`, `qec_export_timesheet`
+  `post_document`, `unpost_document`
 - **Метаданные и ЖР**: `list_metadata_objects`, `get_metadata_structure`,
   `get_event_log`, `find_references_to_object`
 - **Регистры сведений**: `get_register_records`, `write_information_register`,
