@@ -87,6 +87,7 @@
 			<CommonModule>ОтчетСтатистика2Т_Test</CommonModule>
 			<CommonModule>AI_WebContext_Test</CommonModule>
 			<CommonModule>AI_Anonymizer</CommonModule>
+			<CommonModule>AI_Anonymizer_Test</CommonModule>
 			<CommonModule>AI_Executor</CommonModule>
 			<CommonModule>AI_Support</CommonModule>
 		<CommonModule>AI_Diagnostics</CommonModule>
