@@ -28,7 +28,7 @@
 | `/hs/ai/support/create` | POST | Создать обращение: `{"subject","text","contextLink"}` |
 | `/hs/ai/support/reply` | POST | Ответ воркера: `{"id","text"}` → статус «Отвечено» |
 
-## Инструменты (23)
+## Инструменты (26)
 
 - **Запросы и код**: `execute_query` — произвольный запрос; `execute_code` —
   произвольный серверный BSL (eval-выражение, при синтаксической ошибке —
@@ -42,7 +42,9 @@
 - **Регистры сведений**: `get_register_records`, `write_information_register`,
   `delete_register_record`
 - **Диагностика**: `get_document_postings`, `get_exchange_status`,
-  `get_constants`, `get_tech_log` (чтение технологического журнала)
+  `get_constants`, `get_tech_log` (чтение технологического журнала);
+  управление сбором ТЖ: `get_logcfg` / `configure_logcfg` / `restore_logcfg`
+  (точечный logcfg с бэкапом и возвратом; в read-only заблокированы)
 - **Системные**: `delete_object`, `run_unit_tests`, `convert_file`
 
 ## Точка обращений пользователей
