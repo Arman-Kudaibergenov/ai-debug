@@ -1,0 +1,81 @@
+# AI_Debug
+
+Расширение 1С:Предприятие 8.3 с HTTP-API для ИИ-диагностики базы и точкой
+обращений пользователей в поддержку (чат с автодосье, скриншоты, голосовые
+сообщения, ответы внешнего ИИ-воркера).
+
+- **Дистрибутивы (.cfe)** — в [релизах](https://github.com/Arman-Kudaibergenov/ai-debug/releases)
+- **Инструкция по установке** — [УСТАНОВКА.md](УСТАНОВКА.md)
+- Требования: платформа 8.3.24+, конфигурация на БСП, публикация базы на веб-сервере
+- Совместимость расширения: 8.3.14, префикс объектов `AI_`, режим «Использовать в основных ролях»
+
+## HTTP-API (`/hs/ai`, Basic-аутентификация)
+
+| Endpoint | Методы | Назначение |
+|---|---|---|
+| `/hs/ai/health` | GET | Проверка живости: `{"status":"healthy","version":"1.3.0"}` |
+| `/hs/ai/tools/list` | GET | Список инструментов (MCP-стиль) |
+| `/hs/ai/tools/call` | POST | Вызов инструмента: `{"name":"...","arguments":{...}}` |
+| `/hs/ai/resources/list`, `/resources/read?uri=...` | GET | Документация (quickstart, tools, debugging) |
+| `/hs/ai/support/pending` | GET | Новые обращения (для внешнего ИИ-воркера) |
+| `/hs/ai/support/ticket?id=...` | GET | Обращение с историей и досье |
+| `/hs/ai/support/attachment?id=...&index=...` | GET | Вложение (скриншот/аудио) |
+| `/hs/ai/support/create` | POST | Создать обращение: `{"subject","text","contextLink"}` |
+| `/hs/ai/support/reply` | POST | Ответ воркера: `{"id","text"}` → статус «Отвечено» |
+
+## Инструменты (24)
+
+- **Запросы и код**: `execute_query` — произвольный запрос; `execute_code` —
+  произвольный серверный BSL (eval-выражение, при синтаксической ошибке —
+  exec-блок с результатом через переменную `Результат`)
+- **Справочники**: `get_catalog_item`, `find_catalog_items`,
+  `create_catalog_item`, `update_catalog_item`
+- **Документы**: `get_document`, `create_document`, `update_document`,
+  `post_document`, `unpost_document`, `qec_export_timesheet`
+- **Метаданные и ЖР**: `list_metadata_objects`, `get_metadata_structure`,
+  `get_event_log`, `find_references_to_object`
+- **Регистры сведений**: `get_register_records`, `write_information_register`,
+  `delete_register_record`
+- **Диагностика**: `get_document_postings`, `get_exchange_status`,
+  `get_constants`, `get_tech_log` (чтение технологического журнала)
+- **Системные**: `delete_object`, `run_unit_tests`, `convert_file`
+
+## Точка обращений пользователей
+
+Раздел «AI: Поддержка» → «Сообщить о проблеме (AI)» — чат. Расширение
+автоматически собирает досье: пользователь и роли, версии конфигурации и
+расширений, хвост журнала регистрации, контекст объекта (ссылка вставляется
+Ctrl+V в большую зону, туда же Ctrl+V скриншота; кнопка «Запись голоса» —
+голосовое, расшифровывается автоматически). Ответ ИИ появляется в чате сам
+(опрос каждые 15 секунд). Обработку выполняет внешний воркер, опрашивающий
+`/hs/ai/support/pending` — LLM из расширения не вызывается.
+
+## Безопасность
+
+- Вся защита API — Basic-аутентификация HTTP-сервиса и права служебной
+  учётной записи; `execute_code` выполняет произвольный серверный код.
+  Выдавайте доступ только доверенной учётке с минимально нужными правами.
+- После установки снять у расширения флаг «Безопасный режим» (иначе не
+  работают запись обращений и чтение ТЖ) — см. УСТАНОВКА.md.
+- Обезличивание ПДн (регистры `AI_AnonymizationMap/Policy`) — в заделе,
+  механизм пока не реализован: тексты обращений уходят воркеру как есть.
+
+## Структура исходников
+
+```
+AI_Debug/
+├── HTTPServices/ai/          # HTTP-API (health, tools, resources, support)
+├── CommonModules/
+│   ├── AI_Core               # реестр и маршрутизация инструментов
+│   ├── AI_Query, AI_Executor # execute_query, execute_code
+│   ├── AI_Catalogs, AI_Documents, AI_Registers
+│   ├── AI_Metadata           # метаданные, ЖР, поиск ссылок
+│   ├── AI_Diagnostics        # движения, обмены, константы, ТЖ
+│   ├── AI_Support            # обращения: создание, досье, вложения
+│   ├── AI_Security           # валидация параметров инструментов
+│   └── ...                   # логгер, тесты (ЮТТесты), утилиты
+├── Catalogs/AI_Обращения     # обращения пользователей
+├── CommonForms/AI_ФормаЧата  # чат обращения
+├── InformationRegisters/     # AI_Settings, AI_Anonymization*
+└── Roles/AI_Поддержка        # роль «AI: Обращения в поддержку»
+```
