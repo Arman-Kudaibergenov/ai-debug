@@ -76,6 +76,26 @@ Ctrl+V в большую зону, туда же Ctrl+V скриншота; кн
   (`AI_Anonymizer`): колонки/ключи/реквизиты с признаками пароля, токена,
   ключа API заменяются на `[SECRET_REMOVED]` до отдачи наружу.
 
+## Источники и благодарности
+
+- [vladimir-kharin/1c_mcp](https://github.com/vladimir-kharin/1c_mcp) — базовая
+  архитектура (HTTP-сервис в стиле MCP: tools list/call)
+- [SteelMorgan/1c-agent-based-dev-framework](https://github.com/SteelMorgan/1c-agent-based-dev-framework) —
+  `tech-log-analysis` (SKILL.md + references/scenarios.md): основа ресурса
+  `ai://docs/techlog` (классификация инцидентов, корреляция, шаблон вывода)
+- [SteelMorgan/1c-log-checker](https://github.com/SteelMorgan/1c-log-checker) —
+  контракт управления logcfg (get/configure/restore с backup_id) →
+  инструменты `*_logcfg`
+- [SteelMorgan/1c-mcp-tools](https://github.com/SteelMorgan/1c-mcp-tools) —
+  идея ROCTUP-границы (необратимая маскировка секретов до отдачи наружу) →
+  `AI_Anonymizer`; идея `get_access_rights`
+- [vgtitov/bsl-ai-toolkit](https://github.com/vgtitov/bsl-ai-toolkit) —
+  `1c-expert/references/investigation-methodology.md` (MIT): основа ресурса
+  `ai://docs/investigation`; `tech-journal.md` — референс по logcfg
+- [palsergeich/TJ_parce](https://github.com/palsergeich/TJ_parce) —
+  `docs/event-inventory.md`: грабли формата ТЖ с боевого корпуса 175 ГБ →
+  раздел 7 ресурса `ai://docs/techlog`
+
 ## Структура исходников
 
 ```
