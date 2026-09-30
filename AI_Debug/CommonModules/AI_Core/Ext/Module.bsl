@@ -595,6 +595,13 @@
 	|  TLOCK.WaitConnections бывает списком connectID строкой.
 	|- В корпусе MSSQL нет событий DBPOSTGRS/SDBL — под PostgreSQL набор событий другой,
 	|  проверяй фактические имена на целевой базе.
+	|- PostgreSQL (проверено на живой базе): событие называется DBPOSTGRS (НЕ DBPOSTGRES —
+	|  конфиг с опечаткой молча не собирает ничего). Свойства те же, что у DBMSSQL:
+	|  Sql, Trans, dbpid, Usr, SessionID, t:connectID, p:processName; Prm (параметры) —
+	|  не всегда. Сшивка с запросом 1С — через SDBL (свойство Sdbl с текстом запроса,
+	|  плюс Rows/Func/Context), ключи Trans + SessionID + t:connectID.
+	|- Пример SDBL под PG: Sdbl=schema set local 1;,Rows=0 — служебные запросы платформы
+	|  тоже попадают в журнал, фильтруй по Context/Func.
 	|
 	|## 8. Шаблон вывода (обязательный)
 	|
