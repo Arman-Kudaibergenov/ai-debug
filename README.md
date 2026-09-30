@@ -18,7 +18,7 @@
 
 | Endpoint | Методы | Назначение |
 |---|---|---|
-| `/hs/ai/health` | GET | Проверка живости: `{"status":"healthy","version":"1.3.4"}` |
+| `/hs/ai/health` | GET | Проверка живости: `{"status":"healthy","version":"1.4.0"}` |
 | `/hs/ai/tools/list` | GET | Список инструментов (MCP-стиль) |
 | `/hs/ai/tools/call` | POST | Вызов инструмента: `{"name":"...","arguments":{...}}` |
 | `/hs/ai/resources/list`, `/resources/read?uri=...` | GET | Документация (quickstart, tools, debugging, techlog, investigation) |
@@ -28,23 +28,30 @@
 | `/hs/ai/support/create` | POST | Создать обращение: `{"subject","text","contextLink"}` |
 | `/hs/ai/support/reply` | POST | Ответ воркера: `{"id","text"}` → статус «Отвечено» |
 
-## Инструменты (27)
+## Инструменты (34)
 
-- **Запросы и код**: `execute_query` — произвольный запрос; `execute_code` —
-  произвольный серверный BSL (eval-выражение, при синтаксической ошибке —
-  exec-блок с результатом через переменную `Результат`)
+- **Запросы и код**: `execute_query` — произвольный запрос (в т.ч. с параметрами
+  через `paramsCode` — код заполнения параметров в безопасном режиме внутри
+  всегда отменяемой транзакции); `execute_code` — произвольный серверный BSL
+  (eval-выражение, при синтаксической ошибке — exec-блок с результатом через
+  переменную `Результат`)
 - **Справочники**: `get_catalog_item`, `find_catalog_items`,
   `create_catalog_item`, `update_catalog_item`
 - **Документы**: `get_document`, `create_document`, `update_document`,
   `post_document`, `unpost_document`
 - **Метаданные и ЖР**: `list_metadata_objects`, `get_metadata_structure`,
-  `get_event_log`, `find_references_to_object`, `get_access_rights`
+  `get_event_log`, `find_references_to_object`, `get_access_rights`,
+  версионирование объектов: `get_object_versions`, `get_object_version`,
+  `diff_object_versions`
 - **Регистры сведений**: `get_register_records`, `write_information_register`,
   `delete_register_record`
 - **Диагностика**: `get_document_postings`, `get_exchange_status`,
   `get_constants`, `get_tech_log` (чтение технологического журнала);
   управление сбором ТЖ: `get_logcfg` / `configure_logcfg` / `restore_logcfg`
   (точечный logcfg с бэкапом и возвратом; в read-only заблокированы)
+- **Анонимизация ПДн**: `get_anonymization_map` (карта токен → значение
+  по области, read-only), `set_anonymization_policy` (мастер-выключатель
+  и правила: enable|disable|add|remove|list)
 - **Системные**: `delete_object`, `run_unit_tests`, `convert_file`
 
 ## Точка обращений пользователей
@@ -69,8 +76,16 @@ Ctrl+V в большую зону, туда же Ctrl+V скриншота; кн
   1С (предприятие/конфигуратор или прямое удаление записи в СУБД).
 - После установки снять у расширения флаг «Безопасный режим» (иначе не
   работают запись обращений и чтение ТЖ) — см. УСТАНОВКА.md.
-- Обезличивание ПДн (регистры `AI_AnonymizationMap/Policy`) — в заделе,
-  механизм пока не реализован: тексты обращений уходят воркеру как есть.
+- **Обезличивание ПДн** (регистры `AI_AnonymizationPolicy/AI_AnonymizationMap`,
+  инструменты `set_anonymization_policy` / `get_anonymization_map`): при
+  включённой политике строковые значения в ответах `execute_query` и
+  `execute_code` уходят наружу с токенами `[ЛИЦО_N]`, `[ИНН_N]`, `[ТЕЛЕФОН_N]`,
+  `[EMAIL_N]` вместо ПДн (детекторы по имени поля и по контексту ИИН/ИНН/БИН/РНН,
+  телефоны +7/8, email). Токены стабильны и реверсивны: маппинг хранится в
+  `AI_AnonymizationMap`, воркер забирает его через `get_anonymization_map` и
+  восстанавливает значения в финальном ответе локально. Режим правила
+  `Маскировать` — необратимая замена на `[СКРЫТО]`. Политика выключена по
+  умолчанию (нет мастер-записи — поведение как раньше).
 - Секреты: ответы `execute_query`, `execute_code`, `get_document`,
   `get_catalog_item` и `get_register_records` проходят необратимую маскировку
   (`AI_Anonymizer`): колонки/ключи/реквизиты с признаками пароля, токена,
@@ -109,7 +124,7 @@ AI_Debug/
 │   ├── AI_Diagnostics        # движения, обмены, константы, ТЖ, logcfg
 │   ├── AI_Support            # обращения: создание, досье, вложения
 │   ├── AI_Security           # read-only режим, валидация параметров
-│   ├── AI_Anonymizer         # маскировка секретов (ROCTUP)
+│   ├── AI_Anonymizer         # маскировка секретов (ROCTUP) + анонимизация ПДн
 │   └── ...                   # логгер, тесты (ЮТТесты), утилиты
 ├── Catalogs/AI_Обращения     # обращения пользователей
 ├── CommonForms/AI_ФормаЧата  # чат обращения
