@@ -21,14 +21,14 @@
 | `/hs/ai/health` | GET | Проверка живости: `{"status":"healthy","version":"1.3.0"}` |
 | `/hs/ai/tools/list` | GET | Список инструментов (MCP-стиль) |
 | `/hs/ai/tools/call` | POST | Вызов инструмента: `{"name":"...","arguments":{...}}` |
-| `/hs/ai/resources/list`, `/resources/read?uri=...` | GET | Документация (quickstart, tools, debugging, techlog) |
+| `/hs/ai/resources/list`, `/resources/read?uri=...` | GET | Документация (quickstart, tools, debugging, techlog, investigation) |
 | `/hs/ai/support/pending` | GET | Новые обращения (для внешнего ИИ-воркера) |
 | `/hs/ai/support/ticket?id=...` | GET | Обращение с историей и досье |
 | `/hs/ai/support/attachment?id=...&index=...` | GET | Вложение (скриншот/аудио) |
 | `/hs/ai/support/create` | POST | Создать обращение: `{"subject","text","contextLink"}` |
 | `/hs/ai/support/reply` | POST | Ответ воркера: `{"id","text"}` → статус «Отвечено» |
 
-## Инструменты (26)
+## Инструменты (27)
 
 - **Запросы и код**: `execute_query` — произвольный запрос; `execute_code` —
   произвольный серверный BSL (eval-выражение, при синтаксической ошибке —
@@ -38,7 +38,7 @@
 - **Документы**: `get_document`, `create_document`, `update_document`,
   `post_document`, `unpost_document`
 - **Метаданные и ЖР**: `list_metadata_objects`, `get_metadata_structure`,
-  `get_event_log`, `find_references_to_object`
+  `get_event_log`, `find_references_to_object`, `get_access_rights`
 - **Регистры сведений**: `get_register_records`, `write_information_register`,
   `delete_register_record`
 - **Диагностика**: `get_document_postings`, `get_exchange_status`,
