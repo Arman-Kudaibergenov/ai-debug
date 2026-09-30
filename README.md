@@ -18,7 +18,7 @@
 
 | Endpoint | Методы | Назначение |
 |---|---|---|
-| `/hs/ai/health` | GET | Проверка живости: `{"status":"healthy","version":"1.3.0"}` |
+| `/hs/ai/health` | GET | Проверка живости: `{"status":"healthy","version":"1.3.4"}` |
 | `/hs/ai/tools/list` | GET | Список инструментов (MCP-стиль) |
 | `/hs/ai/tools/call` | POST | Вызов инструмента: `{"name":"...","arguments":{...}}` |
 | `/hs/ai/resources/list`, `/resources/read?uri=...` | GET | Документация (quickstart, tools, debugging, techlog, investigation) |
@@ -86,9 +86,10 @@ AI_Debug/
 │   ├── AI_Query, AI_Executor # execute_query, execute_code
 │   ├── AI_Catalogs, AI_Documents, AI_Registers
 │   ├── AI_Metadata           # метаданные, ЖР, поиск ссылок
-│   ├── AI_Diagnostics        # движения, обмены, константы, ТЖ
+│   ├── AI_Diagnostics        # движения, обмены, константы, ТЖ, logcfg
 │   ├── AI_Support            # обращения: создание, досье, вложения
-│   ├── AI_Security           # валидация параметров инструментов
+│   ├── AI_Security           # read-only режим, валидация параметров
+│   ├── AI_Anonymizer         # маскировка секретов (ROCTUP)
 │   └── ...                   # логгер, тесты (ЮТТесты), утилиты
 ├── Catalogs/AI_Обращения     # обращения пользователей
 ├── CommonForms/AI_ФормаЧата  # чат обращения
