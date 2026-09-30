@@ -21,7 +21,7 @@
 | `/hs/ai/health` | GET | Проверка живости: `{"status":"healthy","version":"1.3.0"}` |
 | `/hs/ai/tools/list` | GET | Список инструментов (MCP-стиль) |
 | `/hs/ai/tools/call` | POST | Вызов инструмента: `{"name":"...","arguments":{...}}` |
-| `/hs/ai/resources/list`, `/resources/read?uri=...` | GET | Документация (quickstart, tools, debugging) |
+| `/hs/ai/resources/list`, `/resources/read?uri=...` | GET | Документация (quickstart, tools, debugging, techlog) |
 | `/hs/ai/support/pending` | GET | Новые обращения (для внешнего ИИ-воркера) |
 | `/hs/ai/support/ticket?id=...` | GET | Обращение с историей и досье |
 | `/hs/ai/support/attachment?id=...&index=...` | GET | Вложение (скриншот/аудио) |
