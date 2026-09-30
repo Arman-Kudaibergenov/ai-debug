@@ -54,7 +54,7 @@
 				<xr:Item xsi:type="xr:MDObjectRef">Role.AI_Поддержка</xr:Item>
 			</DefaultRoles>
 			<Vendor>AI Debug</Vendor>
-			<Version>1.3.4</Version>
+			<Version>1.4.0</Version>
 			<DefaultLanguage>Language.Русский</DefaultLanguage>
 			<BriefInformation/>
 			<DetailedInformation/>
@@ -90,6 +90,7 @@
 			<CommonModule>AI_Anonymizer_Test</CommonModule>
 			<CommonModule>AI_Security_Test</CommonModule>
 			<CommonModule>AI_LogCfg_Test</CommonModule>
+			<CommonModule>AI_Query_Test</CommonModule>
 			<CommonModule>AI_Executor</CommonModule>
 			<CommonModule>AI_Support</CommonModule>
 		<CommonModule>AI_Diagnostics</CommonModule>
